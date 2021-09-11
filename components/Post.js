@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Image, StyleSheet, Dimensions, Text} from 'react-native';
 import metro from '../src/images/metro.jpeg';
 
-function Post({onPress, val}) {
+function Post() {
   return (
     <View>
       <View style={{...styles.rowContainer, margin: 10}}>
@@ -21,7 +21,7 @@ function Post({onPress, val}) {
       </View>
       <Image
         style={{width: Dimensions.get('window').width, height: 300}}
-        source={metro}
+        source={{uri: 'https://source.unsplash.com/random/?nature?id=3'}}
       />
     </View>
   );

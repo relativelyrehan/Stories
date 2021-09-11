@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -10,10 +10,7 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
-import ImagePicker, {
-  launchImageLibrary,
-  launchCamera,
-} from 'react-native-image-picker';
+import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
 import send from '../src/icons/send.png';
 import close from '../src/icons/close.png';
 import add from '../src/icons/add.png';
@@ -149,71 +146,47 @@ export default function Story() {
           setPickModal(false);
         }}
         visible={pickModal}>
-        <View
-          style={{
-            position: 'relative',
-          }}>
-          <TouchableOpacity
-            onPress={() => setPickModal(!pickModal)}
-            style={{
-              position: 'absolute',
-              top: 12,
-              left: 12,
-              zIndex: 100,
-            }}>
-            <Image
-              source={close}
-              style={{height: 24, width: 24, tintColor: '#FFF'}}
-            />
-          </TouchableOpacity>
-          {isVideo ? (
+        <View style={styles.modalContainer}>
+          {1 > 0.02 ? (
+            <Image style={styles.modalImage} source={{uri: val[0]?.uri}} />
+          ) : (
             <View
               style={{
-                height: Dimensions.get('window').height,
-                width: Dimensions.get('window').width,
+                height: Dimensions.get('screen').height,
+                width: Dimensions.get('screen').width,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}>
               <Video
-                style={{
-                  height: Dimensions.get('window').height,
-                  width: Dimensions.get('window').width,
-                }}
+                style={{minHeight: 500, width: 500}}
+                repeat={true}
                 source={{uri: val[0]?.uri}}
               />
             </View>
-          ) : (
-            <Image
-              style={{
-                height: Dimensions.get('window').height,
-                width: Dimensions.get('window').width,
-              }}
-              source={{uri: val[0]?.uri}}
-            />
           )}
-
-          <View
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.25)',
-              height: 50,
-              width: Dimensions.get('window').width,
-              position: 'absolute',
-              bottom: '50%',
-              paddingHorizontal: 20,
-              fontSize: 32,
-            }}>
+          <TouchableOpacity onPress={() => setPickModal(!pickModal)}>
+            <Image style={styles.closeIcon} source={close} />
+          </TouchableOpacity>
+          <View style={styles.modalInputContainer}>
             <TextInput
+              placeholderText={'Describe your story'}
+              placeholderTextColor={'#B4B4B4'}
               val={storyData.caption}
               onChangeText={event =>
                 setStoryData({...storyData, caption: event, uri: val[0].uri})
               }
-              style={{fontSize: 24}}
+              style={styles.modalInput}
               placeholder="add to your story"
             />
             <TouchableOpacity
-              onPress={handleStoryUpload}
-              style={styles.buttons}>
-              <Image style={{...styles.icon}} source={send} />
+              style={styles.sendIcon}
+              onPress={handleStoryUpload}>
+              <Image
+                style={{height: 36, width: 36, tintColor: '#FFF'}}
+                source={send}
+              />
             </TouchableOpacity>
-            {console.log('--', appData)}
           </View>
         </View>
       </Modal>
@@ -222,6 +195,45 @@ export default function Story() {
 }
 
 const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    position: 'relative',
+  },
+  modalImage: {
+    width: Dimensions.get('screen').width,
+    height: Dimensions.get('window').height,
+    position: 'absolute',
+    zIndex: -100,
+  },
+  modalInputContainer: {
+    position: 'absolute',
+    top: '60%',
+  },
+  modalInput: {
+    width: Dimensions.get('screen').width,
+    height: 50,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    fontSize: 24,
+    fontWeight: '700',
+    paddingLeft: 15,
+    color: '#FFF',
+  },
+  closeIcon: {
+    marginLeft: 16,
+    marginTop: 16,
+    height: 30,
+    width: 30,
+    tintColor: '#FFF',
+  },
+  sendIcon: {
+    position: 'absolute',
+    top: 7,
+    right: 15,
+    height: 40,
+    width: 40,
+    zIndex: 100,
+  },
+
   container: {
     paddingVertical: 6,
     paddingHorizontal: 8,

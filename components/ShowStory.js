@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Modal,
   View,
@@ -11,10 +11,18 @@ import {
 import Video from 'react-native-video';
 
 import close from '../src/icons/close.png';
+import ChangeButton from './ChangeButton';
 
 function ShowStory({storyModal, appData, setStoryModal, index}) {
-  console.log('-00000-----', appData);
-  const data = appData[index];
+  const [data, setData] = useState();
+  const [counter, setCounter] = useState(0);
+
+  useEffect(() => {
+    if (appData[index + counter] !== undefined) {
+      setData(appData[index + counter]);
+    }
+  }, [counter]);
+  // const data = appData[index];
   return (
     <Modal
       animationType="slide"
@@ -40,18 +48,39 @@ function ShowStory({storyModal, appData, setStoryModal, index}) {
             style={{height: 24, width: 24, tintColor: '#FFF'}}
           />
         </TouchableOpacity>
+        {/* -- Click to change --*/}
+        <ChangeButton
+          onPress={() => {
+            if (counter > 0) {
+              setCounter(counter - 1);
+            } else if (index > 0) {
+              setCounter(counter - 1);
+            } else if (index === 0) return;
+          }}
+          style={{top: 100, left: 0}}
+        />
+        <ChangeButton
+          onPress={() => {
+            if (counter < appData.length - 1) {
+              setCounter(counter + 1);
+            }
+          }}
+          style={{top: 0, right: 0}}
+        />
+        {/* ---------- */}
         {data?.uri.includes('video') ? (
           <View
             style={{
-              height: Dimensions.get('window').height,
-              width: Dimensions.get('window').width,
+              height: Dimensions.get('screen').height,
+              width: Dimensions.get('screen').width,
             }}>
             <Video
               onEnd={() => setStoryModal(false)}
               style={{
-                height: Dimensions.get('window').height,
-                width: Dimensions.get('window').width,
+                minHeight: 650,
+                width: 500,
               }}
+              repeat={true}
               source={{uri: data?.uri}}
             />
           </View>
@@ -64,7 +93,6 @@ function ShowStory({storyModal, appData, setStoryModal, index}) {
             source={{uri: data?.uri}}
           />
         )}
-
         <View
           style={{
             backgroundColor: 'rgba(255, 255, 255, 0.55)',
