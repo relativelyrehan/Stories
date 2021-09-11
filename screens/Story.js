@@ -20,9 +20,11 @@ import add from '../src/icons/add.png';
 import camera from '../src/icons/camera.png';
 import Post from '../components/Post';
 import ShowStory from '../components/ShowStory';
+import Video from 'react-native-video';
 
 export default function Story() {
   const [val, setVal] = useState([]);
+  const [isVideo, setVideo] = useState(false);
   const [storyModal, setStoryModal] = useState(false);
   const [appData, setAppData] = useState([]);
   const [index, setIndex] = useState();
@@ -44,6 +46,7 @@ export default function Story() {
         } else {
           console.log('I am asset -->>', res.assets);
           setVal([...val, res.assets[0]]);
+          setVideo(res.assets[0].duration > 0);
           setPickModal(!pickModal);
         }
       },
@@ -63,6 +66,7 @@ export default function Story() {
         } else {
           console.log('I am response', res);
           setVal([...val, res.assets[0]]);
+          setVideo(res.assets[0].duration > 0);
           setPickModal(!pickModal);
         }
       },
@@ -75,13 +79,18 @@ export default function Story() {
     setPickModal(false);
   };
 
+  // video:28
+
   return (
     <ScrollView style={styles.layout}>
       <View style={styles.header}>
         <Text style={styles.heading}>Stories</Text>
       </View>
       <View style={styles.container}>
-        <View style={styles.rowContainer}>
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={styles.rowContainer}>
           <TouchableOpacity onPress={() => pickImage()}>
             <Image source={add} style={{...styles.profile, margin: 6}} />
           </TouchableOpacity>
@@ -92,6 +101,7 @@ export default function Story() {
             return (
               <View key={key}>
                 <TouchableOpacity
+                  activeOpacity={0.75}
                   onPress={() => {
                     setStoryModal(true);
                     setIndex(key);
@@ -109,7 +119,9 @@ export default function Story() {
                     }}>
                     <Image
                       source={{
-                        uri: 'https://source.unsplash.com/1600x900/?girl',
+                        uri: `https://source.unsplash.com/1600x900/?girl?id=${
+                          key * 3
+                        }`,
                       }}
                       style={styles.profile}
                     />
@@ -127,7 +139,7 @@ export default function Story() {
               index={index}
             />
           )}
-        </View>
+        </ScrollView>
       </View>
       <Post />
       <Post />
@@ -154,13 +166,29 @@ export default function Story() {
               style={{height: 24, width: 24, tintColor: '#FFF'}}
             />
           </TouchableOpacity>
-          <Image
-            style={{
-              height: Dimensions.get('window').height,
-              width: Dimensions.get('window').width,
-            }}
-            source={{uri: val[0]?.uri}}
-          />
+          {isVideo ? (
+            <View
+              style={{
+                height: Dimensions.get('window').height,
+                width: Dimensions.get('window').width,
+              }}>
+              <Video
+                style={{
+                  height: Dimensions.get('window').height,
+                  width: Dimensions.get('window').width,
+                }}
+                source={{uri: val[0]?.uri}}
+              />
+            </View>
+          ) : (
+            <Image
+              style={{
+                height: Dimensions.get('window').height,
+                width: Dimensions.get('window').width,
+              }}
+              source={{uri: val[0]?.uri}}
+            />
+          )}
 
           <View
             style={{
@@ -207,6 +235,8 @@ const styles = StyleSheet.create({
 
   rowContainer: {
     flexDirection: 'row',
+    maxWidth: Dimensions.get('window').width,
+    overflow: 'scroll',
   },
   header: {
     width: '100%',

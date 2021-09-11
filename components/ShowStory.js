@@ -8,13 +8,13 @@ import {
   Dimensions,
   Text,
 } from 'react-native';
+import Video from 'react-native-video';
 
 import close from '../src/icons/close.png';
 
 function ShowStory({storyModal, appData, setStoryModal, index}) {
   console.log('-00000-----', appData);
   const data = appData[index];
-  console.log('i am Index ------', index);
   return (
     <Modal
       animationType="slide"
@@ -40,13 +40,30 @@ function ShowStory({storyModal, appData, setStoryModal, index}) {
             style={{height: 24, width: 24, tintColor: '#FFF'}}
           />
         </TouchableOpacity>
-        <Image
-          style={{
-            height: Dimensions.get('window').height,
-            width: Dimensions.get('window').width,
-          }}
-          source={{uri: data?.uri}}
-        />
+        {data?.uri.includes('video') ? (
+          <View
+            style={{
+              height: Dimensions.get('window').height,
+              width: Dimensions.get('window').width,
+            }}>
+            <Video
+              onEnd={() => setStoryModal(false)}
+              style={{
+                height: Dimensions.get('window').height,
+                width: Dimensions.get('window').width,
+              }}
+              source={{uri: data?.uri}}
+            />
+          </View>
+        ) : (
+          <Image
+            style={{
+              height: Dimensions.get('window').height,
+              width: Dimensions.get('window').width,
+            }}
+            source={{uri: data?.uri}}
+          />
+        )}
 
         <View
           style={{
