@@ -83,10 +83,10 @@ export default function Story() {
       <View style={styles.container}>
         <View style={styles.rowContainer}>
           <TouchableOpacity onPress={() => pickImage()}>
-            <Image source={add} style={styles.profile} />
+            <Image source={add} style={{...styles.profile, margin: 6}} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => pickFromCamera()}>
-            <Image source={camera} style={styles.profile} />
+            <Image source={camera} style={{...styles.profile, margin: 6}} />
           </TouchableOpacity>
           {appData.map((value, key) => {
             return (
@@ -97,10 +97,23 @@ export default function Story() {
                     setIndex(key);
                   }}>
                   {console.log('key', key)}
-                  <Image
-                    source={{uri: 'https://source.unsplash.com/random'}}
-                    style={styles.profile}
-                  />
+                  <View
+                    style={{
+                      backgroundColor: '#A12568',
+                      padding: 3,
+                      margin: 6,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 1000,
+                    }}>
+                    <Image
+                      source={{
+                        uri: 'https://source.unsplash.com/1600x900/?girl',
+                      }}
+                      style={styles.profile}
+                    />
+                  </View>
                 </TouchableOpacity>
               </View>
             );
@@ -190,7 +203,6 @@ const styles = StyleSheet.create({
     height: 60,
     width: 60,
     borderRadius: 1000,
-    marginRight: 8,
   },
 
   rowContainer: {
