@@ -11,7 +11,10 @@ import {
 
 import close from '../src/icons/close.png';
 
-function ShowStory({storyModal, appData, setStoryModal}) {
+function ShowStory({storyModal, appData, setStoryModal, index}) {
+  console.log('-00000-----', appData);
+  const data = appData[index];
+  console.log('i am Index ------', index);
   return (
     <Modal
       animationType="slide"
@@ -42,7 +45,7 @@ function ShowStory({storyModal, appData, setStoryModal}) {
             height: Dimensions.get('window').height,
             width: Dimensions.get('window').width,
           }}
-          source={{uri: appData.uri}}
+          source={{uri: data?.uri}}
         />
 
         <View
@@ -56,7 +59,7 @@ function ShowStory({storyModal, appData, setStoryModal}) {
             fontSize: 32,
           }}>
           <Text style={{textAlign: 'center', fontWeight: '600', fontSize: 32}}>
-            {appData.caption}
+            {data?.caption}
           </Text>
         </View>
       </View>

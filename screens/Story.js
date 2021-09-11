@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
-  KeyboardAvoidingView,
   Image,
   StyleSheet,
   TouchableOpacity,
@@ -18,6 +17,7 @@ import ImagePicker, {
 import send from '../src/icons/send.png';
 import close from '../src/icons/close.png';
 import add from '../src/icons/add.png';
+import camera from '../src/icons/camera.png';
 import Post from '../components/Post';
 import ShowStory from '../components/ShowStory';
 
@@ -25,6 +25,7 @@ export default function Story() {
   const [val, setVal] = useState([]);
   const [storyModal, setStoryModal] = useState(false);
   const [appData, setAppData] = useState([]);
+  const [index, setIndex] = useState();
   const [storyData, setStoryData] = useState({
     uri: '',
     caption: '',
@@ -60,7 +61,7 @@ export default function Story() {
         if (res.didCancel) {
           return;
         } else {
-          console.log('I am asset -->>', res.assets);
+          console.log('I am response', res);
           setVal([...val, res.assets[0]]);
           setPickModal(!pickModal);
         }
@@ -84,26 +85,35 @@ export default function Story() {
           <TouchableOpacity onPress={() => pickImage()}>
             <Image source={add} style={styles.profile} />
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => pickFromCamera()}>
+            <Image source={camera} style={styles.profile} />
+          </TouchableOpacity>
           {appData.map((value, key) => {
             return (
               <View key={key}>
                 <TouchableOpacity
                   onPress={() => {
                     setStoryModal(true);
+                    setIndex(key);
                   }}>
+                  {console.log('key', key)}
                   <Image
                     source={{uri: 'https://source.unsplash.com/random'}}
                     style={styles.profile}
                   />
                 </TouchableOpacity>
-                <ShowStory
-                  appData={value}
-                  storyModal={storyModal}
-                  setStoryModal={setStoryModal}
-                />
               </View>
             );
           })}
+
+          {storyModal && (
+            <ShowStory
+              storyModal={storyModal}
+              appData={appData}
+              setStoryModal={setStoryModal}
+              index={index}
+            />
+          )}
         </View>
       </View>
       <Post />
@@ -162,7 +172,7 @@ export default function Story() {
               style={styles.buttons}>
               <Image style={{...styles.icon}} source={send} />
             </TouchableOpacity>
-            {console.log('--', storyData, appData)}
+            {console.log('--', appData)}
           </View>
         </View>
       </Modal>
